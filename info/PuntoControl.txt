@@ -1,0 +1,4 @@
+usu
+pass
+fecha 
+tipo
