@@ -1,0 +1,9 @@
+body{
+    background-color: #ffe259;
+    background: linear-gradient(to right, #ffa751, #ffe259);
+}
+.bg{
+    background: url(../Imagenes/guaperas.jpg);
+    background-position: center center;
+    background-size: cover;
+}
