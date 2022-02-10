@@ -1,6 +1,5 @@
 body{
-    background-color: #ffe259;
-    background: linear-gradient(to right, #ffa751, #ffe259);
+    background: linear-gradient(90deg, #0700b8 0%, #00ff88 100%);
 }
 .bg{
     background: url(../Imagenes/guaperas.jpg);
