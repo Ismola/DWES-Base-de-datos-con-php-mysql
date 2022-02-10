@@ -302,7 +302,7 @@ switch ($_SESSION["seccion"]) {
                     echo "</div>";
                 echo "</nav>";
             echo "</div>";
-            echo "<div class='row mt-5 '>";
+            echo "<div class='row mt-5 bg-white p-5 rounded shadow'>";
                 echo "<form method='post'>";
                     echo "<div class='col'>";
                         echo "<div class='input-group mb-3'>";
@@ -332,27 +332,6 @@ switch ($_SESSION["seccion"]) {
                 echo "  </form>";
             echo "</div>";
         echo "</div>";
-
-
-
-
-
-//        echo "<form method='post'>";
-//        echo "<input name='nombreAlumno' type='text' placeholder='Nombre del Alumno' required><br>";
-//        echo "<input name='apellidosAlumno' type='text' placeholder='Apellidos del Alumno' required><br>";
-//        echo "<input name='dniAlumno' type='text' placeholder='DNI' required><br>";
-//        echo "<input name='fecha_nacAlumno' type='date' placeholder='Fecha de nacimiento' required><br>";
-//        echo "<select name='tipoviaAlumno' id='' required>";
-//        echo "<option value='mansion'>Mansión</option>";
-//        echo "<option value='puente'>Debajo de un puente</option>";
-//        echo "<option value='basurero'>Basurero</option>";
-//        echo "</select>";
-//        echo "<input name='calleAlumno' type='text' placeholder='Nombre de la calle' required>";
-//        echo "<input name='numeroAlumno' type='number' placeholder='Numero de la calle' required><br>";
-//        echo "<input name='localidadAlumno' type='text' placeholder='Localidad' required><br>";
-//        echo "<input name='telefonoAlumno' type='number' placeholder='Telefono' required><br>";
-//        echo "<button name='añadirDatosAlumno' type='submit'>Añadir datos datos</button>";
-//        echo "  </form>";
         break;
     case 4:
         echo "<div class='container w-100'>";
