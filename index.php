@@ -116,6 +116,7 @@ if (isset($_POST["visualizar"])) {
 
 if (isset($_POST["añadirDatosAlumno"])) {
     añadirAlumno($conexion);
+    $_SESSION["seccion"] = 3;
 }
 if (isset($_POST["buscarModificados"])) {
     mostrarTablaEditable($conexion, crearBusqueda());
@@ -301,24 +302,57 @@ switch ($_SESSION["seccion"]) {
                     echo "</div>";
                 echo "</nav>";
             echo "</div>";
+            echo "<div class='row mt-5 '>";
+                echo "<form method='post'>";
+                    echo "<div class='col'>";
+                        echo "<div class='input-group mb-3'>";
+                            echo "<input name='nombreAlumno' class='form-control' type='text' placeholder='Nombre del Alumno' required>";
+                            echo "<input name='apellidosAlumno'  class='form-control' type='text' placeholder='Apellidos del Alumno' required>";
+                        echo "</div>";
+                        echo "<div class='input-group mb-3'>";
+                            echo "<input name='dniAlumno' class='form-control' type='text' placeholder='DNI' required>";
+                            echo "<input name='fecha_nacAlumno' class='form-control' type='date' placeholder='Fecha de nacimiento' required>";
+                        echo "</div>";
+                        echo "<div class='input-group mb-3'>";
+                            echo "<select class='form-control' name='tipoviaAlumno' id='' required>";
+                                echo "<option value='' disabled selected>Selecciona una opcion</option>";
+                                echo "<option value='mansion'>Mansión</option>";
+                                echo "<option value='puente'>Debajo de un puente</option>";
+                                echo "<option value='basurero'>Basurero</option>";
+                            echo "</select>";
+                            echo "<input class='form-control' name='calleAlumno' type='text' placeholder='Nombre de la calle' required>";
+                            echo "<input class='form-control' name='numeroAlumno' type='number' placeholder='Numero de la calle' required><br>";
+                        echo "</div>";
+                        echo "<div class='input-group mb-3'>";
+                            echo "<input class='form-control' name='localidadAlumno' type='text' placeholder='Localidad' required><br>";
+                            echo "<input class='form-control' name='telefonoAlumno' type='number' placeholder='Telefono' required><br>";
+                        echo "</div>";
+                        echo "<button class='btn btn-danger' name='añadirDatosAlumno' type='submit'>Añadir datos datos</button>";
+                    echo "</div>";
+                echo "  </form>";
+            echo "</div>";
         echo "</div>";
 
-        echo "<form method='post'>";
-        echo "<input name='nombreAlumno' type='text' placeholder='Nombre del Alumno' required><br>";
-        echo "<input name='apellidosAlumno' type='text' placeholder='Apellidos del Alumno' required><br>";
-        echo "<input name='dniAlumno' type='text' placeholder='DNI' required><br>";
-        echo "<input name='fecha_nacAlumno' type='date' placeholder='Fecha de nacimiento' required><br>";
-        echo "<select name='tipoviaAlumno' id='' required>";
-        echo "<option value='mansion'>Mansión</option>";
-        echo "<option value='puente'>Debajo de un puente</option>";
-        echo "<option value='basurero'>Basurero</option>";
-        echo "</select>";
-        echo "<input name='calleAlumno' type='text' placeholder='Nombre de la calle' required>";
-        echo "<input name='numeroAlumno' type='number' placeholder='Numero de la calle' required><br>";
-        echo "<input name='localidadAlumno' type='text' placeholder='Localidad' required><br>";
-        echo "<input name='telefonoAlumno' type='number' placeholder='Telefono' required><br>";
-        echo "<button name='añadirDatosAlumno' type='submit'>Añadir datos datos</button>";
-        echo "  </form>";
+
+
+
+
+//        echo "<form method='post'>";
+//        echo "<input name='nombreAlumno' type='text' placeholder='Nombre del Alumno' required><br>";
+//        echo "<input name='apellidosAlumno' type='text' placeholder='Apellidos del Alumno' required><br>";
+//        echo "<input name='dniAlumno' type='text' placeholder='DNI' required><br>";
+//        echo "<input name='fecha_nacAlumno' type='date' placeholder='Fecha de nacimiento' required><br>";
+//        echo "<select name='tipoviaAlumno' id='' required>";
+//        echo "<option value='mansion'>Mansión</option>";
+//        echo "<option value='puente'>Debajo de un puente</option>";
+//        echo "<option value='basurero'>Basurero</option>";
+//        echo "</select>";
+//        echo "<input name='calleAlumno' type='text' placeholder='Nombre de la calle' required>";
+//        echo "<input name='numeroAlumno' type='number' placeholder='Numero de la calle' required><br>";
+//        echo "<input name='localidadAlumno' type='text' placeholder='Localidad' required><br>";
+//        echo "<input name='telefonoAlumno' type='number' placeholder='Telefono' required><br>";
+//        echo "<button name='añadirDatosAlumno' type='submit'>Añadir datos datos</button>";
+//        echo "  </form>";
         break;
     case 4:
         echo "<div class='container w-100'>";
@@ -443,7 +477,7 @@ switch ($_SESSION["seccion"]) {
                     echo "</div>";
                     echo "<div class='col d-flex justify-content-center'>";
                         echo "<form method='post' action=''>";
-                            echo "<input class='btn btn-outline-primary' type='submit' value='Modificar Alumno' name='modificar'>";
+                            echo "<input class='c' type='submit' value='Modificar Alumno' name='modificar'>";
                         echo "</form>";
                     echo "</div>";
                     echo "<div class='col d-flex justify-content-center'>";
