@@ -115,7 +115,9 @@ if (isset($_POST["visualizar"])) {
 }
 
 if (isset($_POST["añadirDatosAlumno"])) {
-    añadirAlumno($conexion);
+    if (añadirAlumno($conexion) == 1){
+        $respuesta=1;
+    }
     $_SESSION["seccion"] = 3;
 }
 if (isset($_POST["buscarModificados"])) {
@@ -257,16 +259,6 @@ switch ($_SESSION["seccion"]) {
                 echo "</nav>";
             echo "</div>";
         echo "</div>";
-
-
-//        echo "<h1>Bienvenido</h1>";
-//        echo "<form method='post' action=''>";
-//        echo "<input type='submit' value='Agregar alumno' name='agregar'>";
-//        echo "<input type='submit' value='Modificar Alumno' name='modificar'>";
-//        echo "<input type='submit' value='Eliminar Alumno' name='eliminar'>";
-//        echo "<input type='submit' value='Ver Alumnos' name='visualizar'>";
-//        echo "<input type= 'submit' value= 'Cerrar sesión' name='salir'>";
-//        echo "</form>";
         break;
     case 3:
         echo "<div class='container w-100'>";
@@ -305,6 +297,11 @@ switch ($_SESSION["seccion"]) {
             echo "<div class='row mt-5 bg-white p-5 rounded shadow'>";
                 echo "<form method='post'>";
                     echo "<div class='col'>";
+                        if ($respuesta==1){
+                        echo "<div class='input-group mb-3'>";
+                            echo "<div class='alert alert-success role='alert'>Alumno introducido correctamente</div>";
+                        echo "</div>";
+                        }
                         echo "<div class='input-group mb-3'>";
                             echo "<input name='nombreAlumno' class='form-control' type='text' placeholder='Nombre del Alumno' required>";
                             echo "<input name='apellidosAlumno'  class='form-control' type='text' placeholder='Apellidos del Alumno' required>";
@@ -397,7 +394,6 @@ switch ($_SESSION["seccion"]) {
                 echo "  </form>";
             echo "</div>";
         echo "</div>";
-
         break;
     case 5:
         echo "<div class='container w-100'>";
@@ -463,25 +459,6 @@ switch ($_SESSION["seccion"]) {
                 echo "  </form>";
             echo "</div>";
         echo "</div>";
-
-//        echo "<form method='post' action=''>";
-//        echo "<input name='nombreAlumno' type='text' placeholder='Nombre del Alumno'>";
-//        echo "<input name='apellidosAlumno' type='text' placeholder='Apellidos del Alumno' >";
-//        echo "<input name='dniAlumno' type='text' placeholder='DNI' >";
-//        echo "<input name='fecha_nacAlumno' type='date' placeholder='Fecha de nacimiento'>";
-//        echo "<select name='tipoviaAlumno' id='' >";
-//        echo "<option value='' disabled selected>Selecciona una opcion</option>";
-//        echo "<option value='mansion'>Mansión</option>";
-//        echo "<option value='puente'>Debajo de un puente</option>";
-//        echo "<option value='basurero'>Basurero</option>";
-//        echo "</select>";
-//        echo "<input name='calleAlumno' type='text' placeholder='Nombre de la calle'>";
-//        echo "<input name='numeroAlumno' type='number' placeholder='Numero de la calle'>";
-//        echo "<input name='localidadAlumno' type='text' placeholder='Localidad'>";
-//        echo "<input name='telefonoAlumno' type='number' placeholder='Telefono'>";
-//        echo "<input type='submit' value='Buscar Alumnos' name='buscarEliminados'>";
-//
-//        echo "</form>";
         break;
     case 6:
         echo "<div class='container w-100'>";
@@ -547,24 +524,6 @@ switch ($_SESSION["seccion"]) {
                 echo "  </form>";
             echo "</div>";
         echo "</div>";
-
-//        echo "<form method='post' action=''>";
-//        echo "<input name='nombreAlumno' type='text' placeholder='Nombre del Alumno'>";
-//        echo "<input name='apellidosAlumno' type='text' placeholder='Apellidos del Alumno' >";
-//        echo "<input name='dniAlumno' type='text' placeholder='DNI' >";
-//        echo "<input name='fecha_nacAlumno' type='date' placeholder='Fecha de nacimiento'>";
-//        echo "<select name='tipoviaAlumno' id='' >";
-//        echo "<option value='' disabled selected>Selecciona una opcion</option>";
-//        echo "<option value='mansion'>Mansión</option>";
-//        echo "<option value='puente'>Debajo de un puente</option>";
-//        echo "<option value='basurero'>Basurero</option>";
-//        echo "</select>";
-//        echo "<input name='calleAlumno' type='text' placeholder='Nombre de la calle'>";
-//        echo "<input name='numeroAlumno' type='number' placeholder='Numero de la calle'>";
-//        echo "<input name='localidadAlumno' type='text' placeholder='Localidad'>";
-//        echo "<input name='telefonoAlumno' type='number' placeholder='Telefono'>";
-//        echo "<input type='submit' value='Buscar Alumnos' name='buscarVisto'>";
-
         break;
     case 7:
 
@@ -841,7 +800,7 @@ function añadirAlumno($conexion)
         if ($ok == false) {
             echo "Error!!";
         } else {
-            echo "Alumno introducido";
+            return 1;
             mysqli_stmt_close($resultado);
         }
     }
