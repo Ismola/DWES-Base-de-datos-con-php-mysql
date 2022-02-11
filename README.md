@@ -1,6 +1,7 @@
 # DWES-Unidad-3
 ## Trabajo final de la unidad 3
 ### Requisitos para que el proyecto funcione:
+Se necesitará acceso a internet para que el enlace a boostrap se cargue.
 La base de datos con la que se trabaja es escuela. Contiene 2 tablas:
 #### Alumnos
 id - nombre - apellidos - dni - fechaNacimiento - idTipoVia - nombreVia - numeroVia - localidad - telefono
