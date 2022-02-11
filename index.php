@@ -27,6 +27,15 @@ $respuesta = 0;
 	<script src="js/wow.min.js"></script>
 	<script>new WOW().init();</script>
     <style type="text/css">
+        body{
+            background: linear-gradient(90deg, #0700b8 0%, #00ff88 100%);
+        }
+        .bg{
+            background: url(Imagenes/guaperas.jpg);
+            background-position: center center;
+            background-size: cover;
+        }
+
         <?php
 //        Esto servirá para cambiar los temas de colores de cada usuario
         if (isset($_SESSION['usuario'])){
@@ -231,7 +240,7 @@ switch ($_SESSION["seccion"]) {
                               echo "<input type='password' class='form-control' name='contraseña' placeholder='Introduce la contraseña' required>";
                         echo "</div>";
                         echo "<div class='mb-4 form-check'>";
-                            echo "<input type='checkbox' class='form-check-input' required>";
+                            echo "<input id='c' type='checkbox' class='form-check-input' required>";
                             echo "<label for='c' class='form-check-label'>Me vas a poner un 10</label>";
                             echo "</div>";
                         echo "<div class='d-grid'>";
@@ -1109,6 +1118,9 @@ function login($conexion)
     $consulta = "CREATE TABLE IF NOT EXISTS `escuela`.`usuarios` ( `id` INT NOT NULL AUTO_INCREMENT , `usuario` VARCHAR(60) NOT NULL ,
  `contraseña` VARCHAR(255) NOT NULL , `fecha_alt` VARCHAR(60) NOT NULL , `permisos` VARCHAR(60) NOT NULL , `tema` VARCHAR(60) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;";
     $resultado = mysqli_query($conexion, $consulta);
+
+
+
 //  COMPROBAR QUE NO EXISTE UN USUARIO IGUAL
     $usuario = $_POST["usuario"];
     $consulta = "SELECT usuario FROM usuarios WHERE usuario = '$usuario'";
@@ -1138,6 +1150,9 @@ function registro($conexion)
     $consulta = "CREATE TABLE IF NOT EXISTS `escuela`.`usuarios` ( `id` INT NOT NULL AUTO_INCREMENT , `usuario` VARCHAR(60) NOT NULL ,
  `contraseña` VARCHAR(255) NOT NULL , `fecha_alt` VARCHAR(60) NOT NULL , `permisos` VARCHAR(60) NOT NULL , `tema` VARCHAR(60) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;";
     $resultado = mysqli_query($conexion, $consulta);
+
+
+
 //  COMPROBAR QUE NO EXISTE UN USUARIO IGUAL
     $usuario = $_POST["usuario"];
     $consulta = "SELECT usuario FROM usuarios WHERE usuario = '$usuario'";
