@@ -77,29 +77,18 @@ $conexion = mysqli_connect($server, $user, $pwd, $db);
 //5 > Eliminar
 //6 > Visualizar
 
+
+//Esto indica que la seccion por defeto es 0
 $_SESSION["seccion"] = 0;
+//Esto indica que no ha habido ninguna respuesta, como por ejemplo una tabla o un mensaje de: correcto
 $respuesta = 0;
 
+//Esto sirve para ir cambiando entre secciones
 if (isset($_POST["salir"])) {
     $_SESSION["seccion"] = 0;
-
-}
-if (isset($_POST["logearse"])) {
-    if (registro($conexion)==1){
-        $respuesta = 1;
-    }
 }
 if (isset($_POST["registrarse"])) {
     $_SESSION["seccion"] = 1;
-}
-if (isset($_POST["login"])) {
-    if (login($conexion) == 1){
-        $respuesta = 1;
-    }elseif (login($conexion) == 2){
-        $respuesta = 2;
-    }elseif (login($conexion) == 0){
-        $_SESSION["usuario"] =  $_POST["usuario"];
-    }
 }
 if (isset($_POST["agregar"])) {
     $_SESSION["seccion"] = 3;
@@ -112,8 +101,35 @@ if (isset($_POST["eliminar"])) {
 }
 if (isset($_POST["visualizar"])) {
     $_SESSION["seccion"] = 6;
+}if (isset($_POST["agregar"])) {
+    $_SESSION["seccion"] = 3;
+}
+if (isset($_POST["modificar"])) {
+    $_SESSION["seccion"] = 4;
+}
+if (isset($_POST["eliminar"])) {
+    $_SESSION["seccion"] = 5;
+}
+if (isset($_POST["visualizar"])) {
+    $_SESSION["seccion"] = 6;
 }
 
+
+//Esta seccion son para los post que se hacen dentro de cada seccion
+if (isset($_POST["logearse"])) {
+    if (registro($conexion)==1){
+        $respuesta = 1;
+    }
+}
+if (isset($_POST["login"])) {
+    if (login($conexion) == 1){
+        $respuesta = 1;
+    }elseif (login($conexion) == 2){
+        $respuesta = 2;
+    }elseif (login($conexion) == 0){
+        $_SESSION["usuario"] =  $_POST["usuario"];
+    }
+}
 if (isset($_POST["añadirDatosAlumno"])) {
     if (añadirAlumno($conexion) == 1){
         $respuesta=1;
@@ -121,29 +137,38 @@ if (isset($_POST["añadirDatosAlumno"])) {
     $_SESSION["seccion"] = 3;
 }
 if (isset($_POST["buscarModificados"])) {
-    mostrarTablaEditable($conexion, crearBusqueda());
+    $respuesta=1;
     $_SESSION["seccion"] = 4;
 }
 if (isset($_POST["actualizarAlumnos"])) {
     guardarCambios($conexion);
+        $respuesta = 2;
     $_SESSION["seccion"] = 4;
 }
 if (isset($_POST["buscarEliminados"])) {
-    mostrarTablaEliminar($conexion, crearBusqueda());
+    $respuesta = 1;
     $_SESSION["seccion"] = 5;
 }
 if (isset($_POST["eliminarAlumnos"])) {
-    eliminarAlumno($conexion);
+    if (eliminarAlumno($conexion) == 2){
+        $respuesta == 2;
+    }
     $_SESSION["seccion"] = 5;
 }
 
 if (isset($_POST["buscarVisto"])) {
-    mostrarTablaVisto($conexion, crearBusqueda());
+   $respuesta = 1;
     $_SESSION["seccion"] = 6;
 }
 
+
+
+
+
+//Estas son las secciones
 switch ($_SESSION["seccion"]) {
     case 0:
+//        Parte de registro
         echo "<div class='container w-75 bg-primary mt-5 rounded shadow'>";
             echo "<div class='row align-items-strech'>";
                 echo "<div class='col bg d-none d-lg-block col-md-5 col-lg-5 col-xl-6 rounded-start'>";
@@ -154,6 +179,7 @@ switch ($_SESSION["seccion"]) {
                         echo "<img src='Imagenes/logo.png' width='180' alt=''>";
                     echo "</div>";
                     echo "<h2 class='fw-bold text-center pt-5 mb-5'>Iniciar Sesión</h2>";
+//                    Estos son los mensajes de alerta
                     if ($respuesta == 1){
                         echo "<div class='alert alert-danger role='alert'>Has puesto la contraseña mal</div>";
                     }
@@ -186,10 +212,9 @@ switch ($_SESSION["seccion"]) {
                 echo "</div>";
             echo "</div>";
         echo "</div>";
-
-
         break;
     case 1:
+//        Parte de inicio de sesion
         echo "<div class='container w-75 bg-primary mt-5 rounded shadow'>";
             echo "<div class='row align-items-strech'>";
                 echo "<div class='col bg d-none d-lg-block col-md-5 col-lg-5 col-xl-6 rounded'>";
@@ -199,6 +224,7 @@ switch ($_SESSION["seccion"]) {
                         echo "<img src='Imagenes/logo.png' width='180' alt=''>";
                     echo "</div>";
                     echo "<h2 class='fw-bold text-center pt-5 mb-5'>Crar cuenta</h2>";
+//                    Esta es la parte de alertas
                     if ($respuesta == 1){
                         echo "<div class='alert alert-danger role='alert'>El usuario ya existe</div>";
                     }
@@ -225,6 +251,8 @@ switch ($_SESSION["seccion"]) {
         echo "</div>";
         break;
     case 2:
+//        Parte de Bienvenida, solo tiene un menu , que se imprimira siempre que salga el menu
+//        Esto primero es el menu
         echo "<div class='container w-100'>";
             echo "<div class='row'>";
                 echo "<nav class='navbar navbar-light bg-light d-flex justify-content-around rounded mt-3 shadow'>";
@@ -261,6 +289,8 @@ switch ($_SESSION["seccion"]) {
         echo "</div>";
         break;
     case 3:
+//        Parte de agregar alumno
+//        Esto primero es el menu
         echo "<div class='container w-100'>";
             echo "<div class='row'>";
                 echo "<nav class='navbar navbar-light bg-light d-flex justify-content-around rounded mt-3 shadow'>";
@@ -294,6 +324,8 @@ switch ($_SESSION["seccion"]) {
                     echo "</div>";
                 echo "</nav>";
             echo "</div>";
+
+//            Esta parte es el formulario de inicio de sesion
             echo "<div class='row mt-5 bg-white p-5 rounded shadow'>";
                 echo "<form method='post'>";
                     echo "<div class='col'>";
@@ -331,6 +363,8 @@ switch ($_SESSION["seccion"]) {
         echo "</div>";
         break;
     case 4:
+//        Esta parte es la de modificar usuarios
+//        Esto primero es el menu
         echo "<div class='container w-100'>";
             echo "<div class='row'>";
                 echo "<nav class='navbar navbar-light bg-light d-flex justify-content-around rounded mt-3 shadow'>";
@@ -364,38 +398,94 @@ switch ($_SESSION["seccion"]) {
                     echo "</div>";
                 echo "</nav>";
             echo "</div>";
-            echo "<div class='row mt-5 bg-white p-5 rounded shadow'>";
+
+//            Esta parte es el formulario para hacer la busqueda
+            if ($respuesta != 1) {
+                echo "<div class='row mt-5 bg-white p-5 rounded shadow'>";
                 echo "<form method='post'>";
-                    echo "<div class='col'>";
-                        echo "<div class='input-group mb-3'>";
-                            echo "<input name='nombreAlumno' class='form-control' type='text' placeholder='Nombre del Alumno' >";
-                            echo "<input name='apellidosAlumno'  class='form-control' type='text' placeholder='Apellidos del Alumno' >";
-                        echo "</div>";
-                        echo "<div class='input-group mb-3'>";
-                            echo "<input name='dniAlumno' class='form-control' type='text' placeholder='DNI' >";
-                            echo "<input name='fecha_nacAlumno' class='form-control' type='date' placeholder='Fecha de nacimiento' >";
-                        echo "</div>";
-                        echo "<div class='input-group mb-3'>";
-                            echo "<select class='form-control' name='tipoviaAlumno' id='' >";
-                                echo "<option value='' disabled selected>Selecciona una opcion</option>";
-                                echo "<option value='mansion'>Mansión</option>";
-                                echo "<option value='puente'>Debajo de un puente</option>";
-                                echo "<option value='basurero'>Basurero</option>";
-                            echo "</select>";
-                            echo "<input class='form-control' name='calleAlumno' type='text' placeholder='Nombre de la calle' >";
-                            echo "<input class='form-control' name='numeroAlumno' type='number' placeholder='Numero de la calle' ><br>";
-                        echo "</div>";
-                        echo "<div class='input-group mb-3'>";
-                            echo "<input class='form-control' name='localidadAlumno' type='text' placeholder='Localidad' ><br>";
-                            echo "<input class='form-control' name='telefonoAlumno' type='number' placeholder='Telefono' ><br>";
-                        echo "</div>";
-                        echo "<button class='btn btn-success' name='buscarModificados' type='submit'>Buscar alumnos</button>";
+                echo "<div class='col'>";
+//                  Estas es la parte de alertas
+                if ($respuesta == 2){
+                    echo "<div class='input-group mb-3'>";
+                        echo "<div class='alert alert-success role='alert'>Alumnos modificados correctamente</div>";
                     echo "</div>";
+                }
+                echo "<div class='input-group mb-3'>";
+                echo "<input name='nombreAlumno' class='form-control' type='text' placeholder='Nombre del Alumno' >";
+                echo "<input name='apellidosAlumno'  class='form-control' type='text' placeholder='Apellidos del Alumno' >";
+                echo "</div>";
+                echo "<div class='input-group mb-3'>";
+                echo "<input name='dniAlumno' class='form-control' type='text' placeholder='DNI' >";
+                echo "<input name='fecha_nacAlumno' class='form-control' type='date' placeholder='Fecha de nacimiento' >";
+                echo "</div>";
+                echo "<div class='input-group mb-3'>";
+                echo "<select class='form-control' name='tipoviaAlumno' id='' >";
+                echo "<option value='' disabled selected>Selecciona una opcion</option>";
+                echo "<option value='mansion'>Mansión</option>";
+                echo "<option value='puente'>Debajo de un puente</option>";
+                echo "<option value='basurero'>Basurero</option>";
+                echo "</select>";
+                echo "<input class='form-control' name='calleAlumno' type='text' placeholder='Nombre de la calle' >";
+                echo "<input class='form-control' name='numeroAlumno' type='number' placeholder='Numero de la calle' ><br>";
+                echo "</div>";
+                echo "<div class='input-group mb-3'>";
+                echo "<input class='form-control' name='localidadAlumno' type='text' placeholder='Localidad' ><br>";
+                echo "<input class='form-control' name='telefonoAlumno' type='number' placeholder='Telefono' ><br>";
+                echo "</div>";
+                echo "<button class='btn btn-success' name='buscarModificados' type='submit'>Buscar alumnos</button>";
+                echo "</div>";
                 echo "  </form>";
+                echo "</div>";
+            }
+//            Esta es la parte en la que se genera una tabla de inputs, para poder modificar los campos
+        if ($respuesta==1){
+            echo "<div class='row mt-5 bg-white p-5 rounded shadow'>";
+                echo "<div class='col'>";
+                    echo "<div class='input-group mb-3'>";
+            $resultado = mysqli_query($conexion, crearBusqueda());
+            $_SESSION["IDs"] = array();
+            $contador = 1;
+            echo "<form method='post' action=''>";
+            echo "<table class='table'>";
+            echo "<thead>";
+            echo "<tr>";
+            echo "<th scope='col'>Nombre</th>";
+            echo "<th scope='col'>Apellidos</th>";
+            echo "<th scope='col'>DNI</th>";
+            echo "<th scope='col'>Fecha de nacimiento</th>";
+            echo "<th scope='col'>Tipo de via</th>";
+            echo "<th scope='col'>Calle del alumno</th>";
+            echo "<th scope='col'>Numero del alumno</th>";
+            echo "<th scope='col'>Localidad</th>";
+            echo "<th scope='col'>Telefono</th>";
+            echo "</tr>";
+            echo "</thead>";
+            echo "<tbody>";
+            while ($fila = mysqli_fetch_row($resultado)) {
+                array_push($_SESSION["IDs"], $fila[0]);
+                echo "<tr>";
+                for ($i = 1; $i <= 9; $i++) {
+                    echo "<td>";
+                    echo "<input  class='form-control' name='$contador' value='$fila[$i]' type='text'>";
+                    $contador++;
+                    echo "</td>";
+                }
+                echo "</tr>";
+            }
+            echo"</tbody>";
+            echo"</table>";
+            echo "<input type='submit' class='btn btn-success' value='Guardar Cambios' name='actualizarAlumnos'>";
+                echo "</form>";
+                mysqli_close($conexion);
+                echo "</div>";
             echo "</div>";
+            echo "</div>";
+        }
         echo "</div>";
         break;
     case 5:
+//        Estsa parte es para eliminar alumnos
+//        Esta parte es el menu
         echo "<div class='container w-100'>";
             echo "<div class='row'>";
                 echo "<nav class='navbar navbar-light bg-light d-flex justify-content-around rounded mt-3 shadow'>";
@@ -429,8 +519,15 @@ switch ($_SESSION["seccion"]) {
                     echo "</div>";
                 echo "</nav>";
             echo "</div>";
+//            Esta parte es el formulario para buscar almunos
+            if ($respuesta != 1){
             echo "<div class='row mt-5 bg-white p-5 rounded shadow'>";
                 echo "<form method='post'>";
+                if ($respuesta == 2){
+                    echo "<div class='input-group mb-3'>";
+                    echo "<div class='alert alert-success role='alert'>Alumnos eliminados correctamente</div>";
+                    echo "</div>";
+                }
                     echo "<div class='col'>";
                         echo "<div class='input-group mb-3'>";
                             echo "<input name='nombreAlumno' class='form-control' type='text' placeholder='Nombre del Alumno' >";
@@ -458,6 +555,54 @@ switch ($_SESSION["seccion"]) {
                     echo "</div>";
                 echo "  </form>";
             echo "</div>";
+            }
+//            Esta es la parte es la tabla que se genera junto con chekcbox para seleccionar los que quieres borrar
+            if ( $respuesta == 1){
+            echo "<div class='row mt-5 bg-white p-5 rounded shadow'>";
+                echo "<div class='col'>";
+                    echo "<div class='input-group mb-3'>";
+            $resultado = mysqli_query($conexion, crearBusqueda());
+            $_SESSION["IDs"] = array();
+            $contador = 0;
+            echo "<form method='post' action=''>";
+            echo "<table class='table'>";
+            echo "<thead>";
+            echo "<tr>";
+            echo "<th scope='col'>Nombre</th>";
+            echo "<th scope='col'>Apellidos</th>";
+            echo "<th scope='col'>DNI</th>";
+            echo "<th scope='col'>Fecha de nacimiento</th>";
+            echo "<th scope='col'>Tipo de via</th>";
+            echo "<th scope='col'>Calle del alumno</th>";
+            echo "<th scope='col'>Numero del alumno</th>";
+            echo "<th scope='col'>Localidad</th>";
+            echo "<th scope='col'>Telefono</th>";
+            echo "</tr>";
+            echo "</thead>";
+            echo "<tbody>";
+            while ($fila = mysqli_fetch_row($resultado)) {
+                array_push($_SESSION["IDs"], $fila[0]);
+                echo "<tr>";
+                for ($i = 1; $i <= 9; $i++) {
+                    echo "<td>";
+                    echo $fila[$i];
+                    echo "</td>";
+                }
+                echo "<td>";
+                echo "<input class='form-check-input' type='checkbox' name='$contador'>";
+                echo "</td>";
+                echo "</tr>";
+                $contador++;
+            }
+            echo"</tbody>";
+            echo"</table>";
+            echo "<input type='submit' class='btn btn-success' value='Guardar Cambios' name='eliminarAlumnos'>";
+                echo "</form>";
+                mysqli_close($conexion);
+                echo "</div>";
+            echo "</div>";
+            echo "</div>";
+            }
         echo "</div>";
         break;
     case 6:
@@ -494,6 +639,7 @@ switch ($_SESSION["seccion"]) {
                     echo "</div>";
                 echo "</nav>";
             echo "</div>";
+            if ($respuesta != 1){
             echo "<div class='row mt-5 bg-white p-5 rounded shadow'>";
                 echo "<form method='post'>";
                     echo "<div class='col'>";
@@ -523,118 +669,52 @@ switch ($_SESSION["seccion"]) {
                     echo "</div>";
                 echo "  </form>";
             echo "</div>";
+            }
+            if ($respuesta == 1){
+                  echo "<div class='row mt-5 bg-white p-5 rounded shadow'>";
+                echo "<div class='col'>";
+                    echo "<div class='input-group mb-3'>";
+            $resultado = mysqli_query($conexion, crearBusqueda());
+            echo "<form method='post' action=''>";
+            echo "<table class='table'>";
+            echo "<thead>";
+            echo "<tr>";
+            echo "<th scope='col'>Nombre</th>";
+            echo "<th scope='col'>Apellidos</th>";
+            echo "<th scope='col'>DNI</th>";
+            echo "<th scope='col'>Fecha de nacimiento</th>";
+            echo "<th scope='col'>Tipo de via</th>";
+            echo "<th scope='col'>Calle del alumno</th>";
+            echo "<th scope='col'>Numero del alumno</th>";
+            echo "<th scope='col'>Localidad</th>";
+            echo "<th scope='col'>Telefono</th>";
+            echo "</tr>";
+            echo "</thead>";
+            echo "<tbody>";
+            while ($fila = mysqli_fetch_row($resultado)) {
+                echo "<tr>";
+                for ($i = 1; $i <= 9; $i++) {
+                    echo "<td>";
+                    echo $fila[$i];
+                    echo "</td>";
+                }
+                echo "</tr>";
+    }
+            echo"</tbody>";
+            echo"</table>";
+                echo "</form>";
+                mysqli_close($conexion);
+                echo "</div>";
+            echo "</div>";
+            echo "</div>";
+        }
         echo "</div>";
         break;
     case 7:
-
         break;
 }
 
-function mostrarTablaVisto($conexion, $consulta)
-{
-    $resultado = mysqli_query($conexion, $consulta);
-    echo "<form method='post' action=''>";
-    echo "<table border='1'>";
-    echo "<tr>";
-    echo "<td>";
-    echo "Nombre";
-    echo "</td>";
-    echo "<td>";
-    echo "Apellidos";
-    echo "</td>";
-    echo "<td>";
-    echo "DNI";
-    echo "</td>";
-    echo "<td>";
-    echo "Fecha de Nacimiento";
-    echo "</td>";
-    echo "<td>";
-    echo "TIpo de Via";
-    echo "</td>";
-    echo "<td>";
-    echo "Calle del alumno";
-    echo "</td>";
-    echo "<td>";
-    echo "Numero del alumno";
-    echo "</td>";
-    echo "<td>";
-    echo "Localidad";
-    echo "</td>";
-    echo "<td>";
-    echo "Telefono";
-    echo "</td>";
-    echo "</tr>";
-    while ($fila = mysqli_fetch_row($resultado)) {
-        echo "<tr>";
-        for ($i = 1; $i <= 9; $i++) {
-            echo "<td>";
-            echo $fila[$i];
-            echo "</td>";
-        }
-        echo "</tr>";
-    }
-    echo "</table>";
-    echo "</form>";
-    mysqli_close($conexion);
-}
-function mostrarTablaEliminar($conexion, $consulta)
-{
-    $resultado = mysqli_query($conexion, $consulta);
-    $_SESSION["IDs"] = array();
-    $contador = 0;
-    echo "<form method='post' action=''>";
-    echo "<table border='1'>";
-    echo "<tr>";
-    echo "<td>";
-    echo "Nombre";
-    echo "</td>";
-    echo "<td>";
-    echo "Apellidos";
-    echo "</td>";
-    echo "<td>";
-    echo "DNI";
-    echo "</td>";
-    echo "<td>";
-    echo "Fecha de Nacimiento";
-    echo "</td>";
-    echo "<td>";
-    echo "TIpo de Via";
-    echo "</td>";
-    echo "<td>";
-    echo "Calle del alumno";
-    echo "</td>";
-    echo "<td>";
-    echo "Numero del alumno";
-    echo "</td>";
-    echo "<td>";
-    echo "Localidad";
-    echo "</td>";
-    echo "<td>";
-    echo "Telefono";
-    echo "</td>";
-    echo "<td>";
-    echo "Palomita llevame";
-    echo "</td>";
-    echo "</tr>";
-    while ($fila = mysqli_fetch_row($resultado)) {
-        array_push($_SESSION["IDs"], $fila[0]);
-        echo "<tr>";
-        for ($i = 1; $i <= 9; $i++) {
-            echo "<td>";
-            echo $fila[$i];
-            echo "</td>";
-        }
-        echo "<td>";
-        echo "<input type='checkbox' name='$contador'>";
-        echo "</td>";
-        echo "</tr>";
-    }
-    echo "</table>";
-    echo "<input type='submit' value='Eliminar' name='eliminarAlumnos'>";
-    echo "</form>";
-    mysqli_close($conexion);
-
-}
+//Estas son las funciones que se van a usar
 function eliminarAlumno($conexion)
 {
     for ($i = 0; $i < count($_SESSION["IDs"]); $i++) {
@@ -644,12 +724,14 @@ function eliminarAlumno($conexion)
                       FROM escuela.alumnos
                       WHERE id = $id";
             $resultado = mysqli_query($conexion, $consulta);
+
         }
     }
-
+return 2;
 }
 function crearBusqueda()
 {
+//    Esta funcion nos será muy util cada vez que queramos generar una busqueda con los campos escritos
     $nombreAlumno = "";
     $apellidosAlumno = "";
     $dniAlumno = "";
@@ -678,60 +760,9 @@ WHERE
 
     return $consulta;
 }
-function mostrarTablaEditable($conexion, $consulta)
-{
-    $resultado = mysqli_query($conexion, $consulta);
-    $_SESSION["IDs"] = array();
-    $contador = 1;
-    echo "<form method='post' action=''>";
-    echo "<table border='1'>";
-    echo "<tr>";
-    echo "<td>";
-    echo "Nombre";
-    echo "</td>";
-    echo "<td>";
-    echo "Apellidos";
-    echo "</td>";
-    echo "<td>";
-    echo "DNI";
-    echo "</td>";
-    echo "<td>";
-    echo "Fecha de Nacimiento";
-    echo "</td>";
-    echo "<td>";
-    echo "TIpo de Via";
-    echo "</td>";
-    echo "<td>";
-    echo "Calle del alumno";
-    echo "</td>";
-    echo "<td>";
-    echo "Numero del alumno";
-    echo "</td>";
-    echo "<td>";
-    echo "Localidad";
-    echo "</td>";
-    echo "<td>";
-    echo "Telefono";
-    echo "</td>";
-    echo "</tr>";
-    while ($fila = mysqli_fetch_row($resultado)) {
-        array_push($_SESSION["IDs"], $fila[0]);
-        echo "<tr>";
-        for ($i = 1; $i <= 9; $i++) {
-            echo "<td>";
-            echo "<input name='$contador' value='$fila[$i]' type='text'>";
-            $contador++;
-            echo "</td>";
-        }
-        echo "</tr>";
-    }
-    echo "</table>";
-    echo "<input type='submit' value='Guardar Cambios' name='actualizarAlumnos'>";
-    echo "</form>";
-    mysqli_close($conexion);
-}
 function guardarCambios($conexion)
 {
+//    A esta funciona llega $_SESSION["IDs"] y post que van desde el 1 hasta el ultimo creado que se van guardadndo de 8 en 8 en un array
     $contador = 1;
     for ($i = 0; $i < count($_SESSION["IDs"]); $i++) {
         $data = array();
@@ -751,15 +782,12 @@ function guardarCambios($conexion)
                              localidad = ?,
                              telefono = ?
                          WHERE id = $id";
-
         $resultado = mysqli_prepare($conexion, $consulta);
         $ok = mysqli_stmt_bind_param($resultado, "sssssssss", ...$data);
         $ok = mysqli_stmt_execute($resultado);
-
         if ($ok == false) {
             echo "error";
         } else {
-            $_SESSION["seccion"] = 4;
             mysqli_stmt_close($resultado);
         }
     }
@@ -767,6 +795,7 @@ function guardarCambios($conexion)
 }
 function añadirAlumno($conexion)
 {
+//    Esta funciona no la explico porque es lo que hemos estado haciendo durante todo el tema y solamente he copiado y pegado
     $consulta = "CREATE TABLE IF NOT EXISTS `alumnos` (
 `id` INT(10) NOT NULL AUTO_INCREMENT ,
 `nombre` VARCHAR(50) NOT NULL , `apellidos` VARCHAR(50) NOT NULL ,
@@ -854,7 +883,7 @@ function registro($conexion)
         $hoy = getdate();
         $fecha = $hoy["mday"] . "/" . $hoy["mon"] . "/" . $hoy["year"];
         $contra = password_hash($_POST["contraseña"], PASSWORD_DEFAULT);
-
+        $data = array($_POST["usuario"],$contra,$fecha,"fase");
          $consulta = "INSERT INTO `usuarios` (`usuario`, `contraseña`, `fecha_alt`, `permisos`)VALUES (?, ?, ?, ?)";
         $resultado = mysqli_prepare($conexion, $consulta);
         $ok = mysqli_stmt_bind_param($resultado, "ssss", ...$data);
@@ -873,6 +902,7 @@ function registro($conexion)
 }
 function imp($array)
 {
+//    Esta funcion nos será muy util para ver lo que contiene un array
     echo '<pre>';
     print_r($array);
     echo '<pre>';
