@@ -1,3 +1,16 @@
+<?php
+session_start();
+$server = "192.168.62.131";
+$user = "Ismael";
+$pwd = "Ismola2002";
+$db = "escuela";
+$_SESSION["seccion"] = 0;
+$conexion = mysqli_connect($server, $user, $pwd, $db);
+//Esto indica que la seccion por defeto es 0
+$_SESSION["seccion"] = 0;
+//Esto indica que no ha habido ninguna respuesta, como por ejemplo una tabla o un mensaje de: correcto
+$respuesta = 0;
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -13,6 +26,87 @@
 	<link rel="stylesheet" href="css/animate.css">
 	<script src="js/wow.min.js"></script>
 	<script>new WOW().init();</script>
+    <style type="text/css">
+        <?php
+        if (isset($_SESSION['usuario'])){
+            if ($_SESSION['usuario'] !== 0){
+                $usuario = $_SESSION['usuario'];
+                $consulta = "SELECT tema FROM usuarios WHERE usuario = '$usuario'";
+                $resultado = mysqli_query($conexion, $consulta);
+                $fila = mysqli_fetch_row($resultado);
+                if ( $fila[0] == "yellow") {
+                    echo ("
+                    .btn-primary:hover{
+                            background: #FFC107;
+                    }
+                    .btn-primary{
+                        background:#FFC107;
+                        border: 1px solid #FFC107;
+                    }
+                    .btn-outline-primary{
+                        border: 1px solid #FFC107;
+                        color: #FFC107;
+                    }
+                    .btn-outline-primary:hover{
+                        color #fff;
+                        background: #FFC107;
+                        border: 1px solid #FFC107;
+                    }
+                    body{
+                        background: linear-gradient(90deg, #fcff9e 0%, #c67700 100%);
+                    }
+                    ");
+                }
+                            if ( $fila[0] == "green") {
+                    echo ("
+                    .btn-primary:hover{
+                            background:#28A745;
+                    }
+                    .btn-primary{
+                        background: #28A745;
+                        border: 1px solid #28A745;
+                    }
+                    .btn-outline-primary{
+                        border: 1px solid #28A745;
+                        color: #28A745;
+                    }
+                    .btn-outline-primary:hover{
+                        color #fff;
+                        background: #28A745;
+                        border: 1px solid #28A745;
+                    }
+                    body{
+                        background: linear-gradient(90deg, #9ebd13 0%, #008552 100%);
+                    }
+                    ");
+                }
+                                                    if ( $fila[0] == "light") {
+                    echo ("
+                    .btn-primary:hover{
+                            background: #4a4e52;
+                    }
+                    .btn-primary{
+                        background: #4a4e52;
+                        border: 1px solid #4a4e52;
+                    }
+                    .btn-outline-primary{
+                        border: 1px solid #4a4e52;
+                        color: black;
+                    }
+                    .btn-outline-primary:hover{
+                        color #fff;
+                        background: #4a4e52;
+                        border: 1px solid #4a4e52;
+                    }
+                    body{
+                        background: linear-gradient(90deg, #e3ffe7 0%, #d9e7ff 100%);
+                    }
+                    ");
+                }
+            }
+        }
+        ?>
+    </style>
 </head>
 <body>
 <!--
@@ -58,17 +152,8 @@ Imagenes de Stock
 	https://stocksnap.io/
 
  -->
-
 <?php
-session_start();
-
-$server = "192.168.62.131";
-$user = "Ismael";
-$pwd = "Ismola2002";
-$db = "escuela";
-$_SESSION["seccion"] = 0;
-$conexion = mysqli_connect($server, $user, $pwd, $db);
-//Ventanas:
+//Secciones:
 //0 > la de iniciar sesión
 //1 > Registrarse
 //2 > Bienvenido
@@ -76,16 +161,10 @@ $conexion = mysqli_connect($server, $user, $pwd, $db);
 //4 > Modificar
 //5 > Eliminar
 //6 > Visualizar
-
-
-//Esto indica que la seccion por defeto es 0
-$_SESSION["seccion"] = 0;
-//Esto indica que no ha habido ninguna respuesta, como por ejemplo una tabla o un mensaje de: correcto
-$respuesta = 0;
-
 //Esto sirve para ir cambiando entre secciones
 if (isset($_POST["salir"])) {
     $_SESSION["seccion"] = 0;
+    $_SESSION["usuario"] =  0;
 }
 if (isset($_POST["registrarse"])) {
     $_SESSION["seccion"] = 1;
@@ -101,19 +180,10 @@ if (isset($_POST["eliminar"])) {
 }
 if (isset($_POST["visualizar"])) {
     $_SESSION["seccion"] = 6;
-}if (isset($_POST["agregar"])) {
-    $_SESSION["seccion"] = 3;
 }
-if (isset($_POST["modificar"])) {
-    $_SESSION["seccion"] = 4;
+if (isset($_POST["modiusu"])) {
+    $_SESSION["seccion"] = 7;
 }
-if (isset($_POST["eliminar"])) {
-    $_SESSION["seccion"] = 5;
-}
-if (isset($_POST["visualizar"])) {
-    $_SESSION["seccion"] = 6;
-}
-
 
 //Esta seccion son para los post que se hacen dentro de cada seccion
 if (isset($_POST["logearse"])) {
@@ -155,15 +225,19 @@ if (isset($_POST["eliminarAlumnos"])) {
     }
     $_SESSION["seccion"] = 5;
 }
-
 if (isset($_POST["buscarVisto"])) {
    $respuesta = 1;
     $_SESSION["seccion"] = 6;
 }
-
-
-
-
+if (isset($_POST["buscarusus"])) {
+    $respuesta = 1;
+    $_SESSION["seccion"] = 7;
+}
+if (isset($_POST["actualizarUsuarios"])) {
+    $respuesta = 2;
+    guardarUsuarios($conexion);
+    $_SESSION["seccion"] = 7;
+}
 
 //Estas son las secciones
 switch ($_SESSION["seccion"]) {
@@ -184,7 +258,7 @@ switch ($_SESSION["seccion"]) {
                         echo "<div class='alert alert-danger role='alert'>Has puesto la contraseña mal</div>";
                     }
                     if ($respuesta == 2){
-                        echo "<div class='alert alert-danger role='alert'>Has puesto el usuario mal</div>";
+                        echo "<div class='alert alert-danger role='alert'>El usuario no existe</div>";
                     }
                     echo "<form method='post' action=''>";
                         echo "<div class='mb-4'>";
@@ -259,6 +333,7 @@ switch ($_SESSION["seccion"]) {
                             echo "<div class='col d-flex justify-content-center'>";
                                 echo  $_SESSION["usuario"];
                             echo "</div>";
+                            if (saberPermisos($conexion,$_SESSION['usuario']) == 1){
                             echo "<div class='col d-flex justify-content-center'>";
                                 echo "<form method='post' action=''>";
                                     echo "<input class='btn btn-outline-primary' type='submit' value='Agregar alumno' name='agregar'>";
@@ -274,6 +349,12 @@ switch ($_SESSION["seccion"]) {
                                     echo "<input class='btn btn-outline-primary' type='submit' value='Eliminar Alumno' name='eliminar'>";
                                 echo "</form>";
                             echo "</div>";
+                                echo "<div class='col d-flex justify-content-center'>";
+                                echo "<form method='post' action=''>";
+                                echo "<input class='btn btn-outline-primary' type='submit' value='Modificar usuarios' name='modiusu'>";
+                                echo "</form>";
+                                echo "</div>";
+                            }
                             echo "<div class='col d-flex justify-content-center'>";
                                 echo "<form method='post' action=''>";
                                     echo "<input class='btn btn-outline-primary' type='submit' value='Ver Alumnos' name='visualizar'>";
@@ -297,21 +378,28 @@ switch ($_SESSION["seccion"]) {
                     echo "<div class='col d-flex justify-content-center'>";
                         echo  $_SESSION["usuario"];
                     echo "</div>";
-                    echo "<div class='col d-flex justify-content-center'>";
+                    if (saberPermisos($conexion,$_SESSION['usuario']) == 1) {
+                        echo "<div class='col d-flex justify-content-center'>";
                         echo "<form method='post' action=''>";
-                            echo "<input class='btn btn-primary' type='submit' value='Agregar alumno' name='agregar'>";
+                        echo "<input class='btn btn-primary' type='submit' value='Agregar alumno' name='agregar'>";
                         echo "</form>";
-                    echo "</div>";
-                    echo "<div class='col d-flex justify-content-center'>";
+                        echo "</div>";
+                        echo "<div class='col d-flex justify-content-center'>";
                         echo "<form method='post' action=''>";
-                            echo "<input class='btn btn-outline-primary' type='submit' value='Modificar Alumno' name='modificar'>";
+                        echo "<input class='btn btn-outline-primary' type='submit' value='Modificar Alumno' name='modificar'>";
                         echo "</form>";
-                    echo "</div>";
-                    echo "<div class='col d-flex justify-content-center'>";
+                        echo "</div>";
+                        echo "<div class='col d-flex justify-content-center'>";
                         echo "<form method='post' action=''>";
-                            echo "<input class='btn btn-outline-primary' type='submit' value='Eliminar Alumno' name='eliminar'>";
+                        echo "<input class='btn btn-outline-primary' type='submit' value='Eliminar Alumno' name='eliminar'>";
                         echo "</form>";
-                    echo "</div>";
+                        echo "</div>";
+                        echo "<div class='col d-flex justify-content-center'>";
+                        echo "<form method='post' action=''>";
+                        echo "<input class='btn btn-outline-primary' type='submit' value='Modificar usuarios' name='modiusu'>";
+                        echo "</form>";
+                        echo "</div>";
+                    }
                     echo "<div class='col d-flex justify-content-center'>";
                         echo "<form method='post' action=''>";
                             echo "<input class='btn btn-outline-primary' type='submit' value='Ver Alumnos' name='visualizar'>";
@@ -371,21 +459,28 @@ switch ($_SESSION["seccion"]) {
                     echo "<div class='col d-flex justify-content-center'>";
                         echo  $_SESSION["usuario"];
                     echo "</div>";
-                    echo "<div class='col d-flex justify-content-center'>";
+                    if (saberPermisos($conexion,$_SESSION['usuario']) == 1) {
+                        echo "<div class='col d-flex justify-content-center'>";
                         echo "<form method='post' action=''>";
-                            echo "<input class='btn btn-outline-primary' type='submit' value='Agregar alumno' name='agregar'>";
+                        echo "<input class='btn btn-outline-primary' type='submit' value='Agregar alumno' name='agregar'>";
                         echo "</form>";
-                    echo "</div>";
-                    echo "<div class='col d-flex justify-content-center'>";
+                        echo "</div>";
+                        echo "<div class='col d-flex justify-content-center'>";
                         echo "<form method='post' action=''>";
-                            echo "<input class='btn btn-primary' type='submit' value='Modificar Alumno' name='modificar'>";
+                        echo "<input class='btn btn-primary' type='submit' value='Modificar Alumno' name='modificar'>";
                         echo "</form>";
-                    echo "</div>";
-                    echo "<div class='col d-flex justify-content-center'>";
+                        echo "</div>";
+                        echo "<div class='col d-flex justify-content-center'>";
                         echo "<form method='post' action=''>";
-                            echo "<input class='btn btn-outline-primary' type='submit' value='Eliminar Alumno' name='eliminar'>";
+                        echo "<input class='btn btn-outline-primary' type='submit' value='Eliminar Alumno' name='eliminar'>";
                         echo "</form>";
-                    echo "</div>";
+                        echo "</div>";
+                        echo "<div class='col d-flex justify-content-center'>";
+                        echo "<form method='post' action=''>";
+                        echo "<input class='btn btn-outline-primary' type='submit' value='Modificar usuarios' name='modiusu'>";
+                        echo "</form>";
+                        echo "</div>";
+                    }
                     echo "<div class='col d-flex justify-content-center'>";
                         echo "<form method='post' action=''>";
                             echo "<input class='btn btn-outline-primary' type='submit' value='Ver Alumnos' name='visualizar'>";
@@ -492,21 +587,28 @@ switch ($_SESSION["seccion"]) {
                     echo "<div class='col d-flex justify-content-center'>";
                         echo  $_SESSION["usuario"];
                     echo "</div>";
-                    echo "<div class='col d-flex justify-content-center'>";
+                    if (saberPermisos($conexion,$_SESSION['usuario']) == 1) {
+                        echo "<div class='col d-flex justify-content-center'>";
                         echo "<form method='post' action=''>";
-                            echo "<input class='btn btn-outline-primary' type='submit' value='Agregar alumno' name='agregar'>";
+                        echo "<input class='btn btn-outline-primary' type='submit' value='Agregar alumno' name='agregar'>";
                         echo "</form>";
-                    echo "</div>";
-                    echo "<div class='col d-flex justify-content-center'>";
+                        echo "</div>";
+                        echo "<div class='col d-flex justify-content-center'>";
                         echo "<form method='post' action=''>";
-                            echo "<input class='btn btn-outline-primary' type='submit' value='Modificar Alumno' name='modificar'>";
+                        echo "<input class='btn btn-outline-primary' type='submit' value='Modificar Alumno' name='modificar'>";
                         echo "</form>";
-                    echo "</div>";
-                    echo "<div class='col d-flex justify-content-center'>";
+                        echo "</div>";
+                        echo "<div class='col d-flex justify-content-center'>";
                         echo "<form method='post' action=''>";
-                            echo "<input class='btn btn-primary' type='submit' value='Eliminar Alumno' name='eliminar'>";
+                        echo "<input class='btn btn-primary' type='submit' value='Eliminar Alumno' name='eliminar'>";
                         echo "</form>";
-                    echo "</div>";
+                        echo "</div>";
+                        echo "<div class='col d-flex justify-content-center'>";
+                        echo "<form method='post' action=''>";
+                        echo "<input class='btn btn-outline-primary' type='submit' value='Modificar usuarios' name='modiusu'>";
+                        echo "</form>";
+                        echo "</div>";
+                    }
                     echo "<div class='col d-flex justify-content-center'>";
                         echo "<form method='post' action=''>";
                             echo "<input class='btn btn-outline-primary' type='submit' value='Ver Alumnos' name='visualizar'>";
@@ -612,21 +714,28 @@ switch ($_SESSION["seccion"]) {
                     echo "<div class='col d-flex justify-content-center'>";
                         echo  $_SESSION["usuario"];
                     echo "</div>";
-                    echo "<div class='col d-flex justify-content-center'>";
+                   if (saberPermisos($conexion,$_SESSION['usuario']) == 1) {
+                        echo "<div class='col d-flex justify-content-center'>";
                         echo "<form method='post' action=''>";
-                            echo "<input class='btn btn-outline-primary' type='submit' value='Agregar alumno' name='agregar'>";
+                        echo "<input class='btn btn-outline-primary' type='submit' value='Agregar alumno' name='agregar'>";
                         echo "</form>";
-                    echo "</div>";
-                    echo "<div class='col d-flex justify-content-center'>";
+                        echo "</div>";
+                        echo "<div class='col d-flex justify-content-center'>";
                         echo "<form method='post' action=''>";
-                            echo "<input class='btn btn-outline-primary' type='submit' value='Modificar Alumno' name='modificar'>";
+                        echo "<input class='btn btn-outline-primary' type='submit' value='Modificar Alumno' name='modificar'>";
                         echo "</form>";
-                    echo "</div>";
-                    echo "<div class='col d-flex justify-content-center'>";
+                        echo "</div>";
+                        echo "<div class='col d-flex justify-content-center'>";
                         echo "<form method='post' action=''>";
-                            echo "<input class='btn btn-outline-primary' type='submit' value='Eliminar Alumno' name='eliminar'>";
+                        echo "<input class='btn btn-outline-primary' type='submit' value='Eliminar Alumno' name='eliminar'>";
                         echo "</form>";
-                    echo "</div>";
+                        echo "</div>";
+                        echo "<div class='col d-flex justify-content-center'>";
+                        echo "<form method='post' action=''>";
+                        echo "<input class='btn btn-outline-primary' type='submit' value='Modificar usuarios' name='modiusu'>";
+                        echo "</form>";
+                        echo "</div>";
+                    }
                     echo "<div class='col d-flex justify-content-center'>";
                         echo "<form method='post' action=''>";
                             echo "<input class='btn btn-primary' type='submit' value='Ver Alumnos' name='visualizar'>";
@@ -711,10 +820,171 @@ switch ($_SESSION["seccion"]) {
         echo "</div>";
         break;
     case 7:
+        echo "<div class='container w-100'>";
+        echo "<div class='row'>";
+        echo "<nav class='navbar navbar-light bg-light d-flex justify-content-around rounded mt-3 shadow'>";
+        echo "<div class='col d-flex justify-content-center'>";
+        echo  $_SESSION["usuario"];
+        echo "</div>";
+        if (saberPermisos($conexion,$_SESSION['usuario']) == 1) {
+            echo "<div class='col d-flex justify-content-center'>";
+            echo "<form method='post' action=''>";
+            echo "<input class='btn btn-outline-primary' type='submit' value='Agregar alumno' name='agregar'>";
+            echo "</form>";
+            echo "</div>";
+            echo "<div class='col d-flex justify-content-center'>";
+            echo "<form method='post' action=''>";
+            echo "<input class='btn btn-outline-primary' type='submit' value='Modificar Alumno' name='modificar'>";
+            echo "</form>";
+            echo "</div>";
+            echo "<div class='col d-flex justify-content-center'>";
+            echo "<form method='post' action=''>";
+            echo "<input class='btn btn-outline-primary' type='submit' value='Eliminar Alumno' name='eliminar'>";
+            echo "</form>";
+            echo "</div>";
+            echo "<div class='col d-flex justify-content-center'>";
+            echo "<form method='post' action=''>";
+            echo "<input class='btn btn-primary' type='submit' value='Modificar usuarios' name='modiusu'>";
+            echo "</form>";
+            echo "</div>";
+        }
+        echo "<div class='col d-flex justify-content-center'>";
+        echo "<form method='post' action=''>";
+        echo "<input class='btn btn-outline-primary' type='submit' value='Ver Alumnos' name='visualizar'>";
+        echo "</form>";
+        echo "</div>";
+        echo "<div class='col d-flex justify-content-center'>";
+        echo "<form method='post' action=''>";
+        echo "<input class='btn btn-danger' type= 'submit' value= 'Cerrar sesión' name='salir'>";
+        echo "</form>";
+        echo "</div>";
+        echo "</nav>";
+        echo "</div>";
+        if ($respuesta != 1){
+            echo "<div class='row mt-5 bg-white p-5 rounded shadow'>";
+            echo "<form method='post'>";
+            echo "<div class='col'>";
+            echo "<div class='input-group mb-3'>";
+            echo "<input name='usuario' class='form-control' type='text' placeholder='Nombre del Alumno' >";
+            echo "<input name='permisos'  class='form-control' type='text' placeholder='Apellidos del Alumno' >";
+            echo "<input name='tema' class='form-control' type='text' placeholder='DNI' >";
+            echo "<input name='fecha_altUsu' class='form-control' type='date' placeholder='Fecha de nacimiento' >";
+            echo "</div>";
+            echo "<button class='btn btn-success' name='buscarusus' type='submit'>Buscar alumnos</button>";
+            echo "</div>";
+            echo "  </form>";
+            echo "</div>";
+        }
+            if ($respuesta==1){
+                echo "<div class='row mt-5 bg-white p-5 rounded shadow'>";
+                echo "<div class='col'>";
+                echo "<div class='input-group mb-3'>";
+                $resultado = mysqli_query($conexion, crearBusquedaUsuarios());
+                $_SESSION["IDs"] = array();
+                $contador = 1;
+                echo "<form method='post' action=''>";
+                echo "<table class='table'>";
+                echo "<thead>";
+                echo "<tr>";
+                echo "<th scope='col'>Usuario</th>";
+                echo "<th scope='col'>Fecha alt</th>";
+                echo "<th scope='col'>Permisos</th>";
+                echo "<th scope='col'>Tema</th>";
+                echo "</tr>";
+                echo "</thead>";
+                echo "<tbody>";
+                while ($fila = mysqli_fetch_row($resultado)) {
+                    array_push($_SESSION["IDs"], $fila[0]);
+                    echo "<tr>";
+                    echo "<td>";
+                    echo "<input  class='form-control' name='$contador' value='$fila[0]' type='text'>";
+                    $contador++;
+                    echo "</td>";
+                    echo "<td>";
+                    echo "<input  class='form-control' name='$contador' value='$fila[1]' type='text'>";
+                    $contador++;
+                    echo "</td>";
+                    echo "<td>";
+                    echo "<select class='form-control' name='$contador' id='' >";
+                    if ($fila[2] == "true"){
+                        echo "<option selected value='true'>Si</option>";
+                        echo "<option value='false'>No</option>";
+                    }
+                    if ($fila[2] == "false"){
+                        echo "<option value='true'>Si</option>";
+                        echo "<option selected value='false'>No</option>";
+                    }
+                    echo "</select>";
+                    $contador++;
+                    echo "</td>";
+                    echo "<td>";
+                    echo "<select class='form-control' name='$contador' id='' >";
+                    if ($fila[3] == "yellow"){
+                        echo "<option selected value='yellow'>Soleado</option>";
+                        echo "<option value='green'>Naturaleza</option>";
+                        echo "<option value='white'>Nevado</option>";
+
+                    }
+                    if ($fila[3] == "green"){
+                        echo "<option  value='yellow'>Soleado</option>";
+                        echo "<option selected value='green'>Naturaleza</option>";
+                        echo "<option value='white'>Nevado</option>";
+                    }
+                    if ($fila[3] == "light"){
+                        echo "<option value='yellow'>Soleado</option>";
+                        echo "<option value='green'>Naturaleza</option>";
+                        echo "<option selected value='white'>Nevado</option>";
+                    }
+                    echo "</select>";
+                    $contador++;
+                    echo "</td>";
+                    echo "</tr>";
+                }
+                echo"</tbody>";
+                echo"</table>";
+                echo "<input type='submit' class='btn btn-success' value='Guardar Cambios' name='actualizarUsuarios'>";
+                echo "</form>";
+                mysqli_close($conexion);
+                echo "</div>";
+                echo "</div>";
+                echo "</div>";
+            }
         break;
 }
 
 //Estas son las funciones que se van a usar
+function crearBusquedaUsuarios(){
+    //    Esta funcion nos será muy util cada vez que queramos generar una busqueda con los campos escritos
+    $usuario = "";
+    $permisos = "";
+    $tema = "";
+    $fecha_altUsu = "";
+    if (isset($_POST["usuario"])) {$usuario = $_POST["usuario"];}
+    if (isset($_POST["permisos"])) {$permisos = $_POST["permisos"];}
+    if (isset($_POST["tema"])) {$tema = $_POST["tema"];}
+    if (isset($_POST["fecha_altUsu"])) {$fecha_altUsu = $_POST["fecha_altUsu"];}
+    //  COMPROBAR QUE NO EXISTE UN USUARIO IGUAL
+    $consulta = "SELECT
+    usuario, fecha_alt,permisos,tema
+FROM
+    usuarios
+WHERE
+        usuario like '%$usuario%' AND
+        permisos  like '%$permisos%' AND
+      fecha_alt like '%$fecha_altUsu%' AND
+        tema  like '%$tema%'";
+    return $consulta;
+}
+function saberPermisos($conexion,$usuario){
+    $consulta = "SELECT permisos FROM usuarios WHERE usuario = '$usuario'";
+    $resultado = mysqli_query($conexion, $consulta);
+    $fila = mysqli_fetch_row($resultado);
+        if ( $fila[0] == "false") {
+            return 0;
+        } else {
+            return 1;
+        }
+}
 function eliminarAlumno($conexion)
 {
     for ($i = 0; $i < count($_SESSION["IDs"]); $i++) {
@@ -757,8 +1027,34 @@ WHERE
         numeroVia like '%$numeroAlumno%' AND
         localidad like '%$localidadAlumno%' AND
         telefono like '%$telefonoAlumno%'";
-
     return $consulta;
+}
+function guardarUsuarios($conexion){
+        $contador = 1;
+    for ($i = 0; $i < count($_SESSION["IDs"]); $i++) {
+        $data = array();
+        for ($a = 0; $a < 4; $a++) {
+            array_push($data, $_POST[$contador]);
+            $contador++;
+        }
+        imp($_SESSION["IDs"]);
+//        $id = $_SESSION["IDs"][$i];
+//        $consulta = "    UPDATE usuarios
+//                         SET usuario = ?,
+//                             fecha_alt= ?,
+//                             permisos = ?,
+//                             tema = ?,
+//                         WHERE id = $id";
+//        $resultado = mysqli_prepare($conexion, $consulta);
+//        $ok = mysqli_stmt_bind_param($resultado, "ssss", ...$data);
+//        $ok = mysqli_stmt_execute($resultado);
+//        if ($ok == false) {
+//            echo "error";
+//        } else {
+//            mysqli_stmt_close($resultado);
+//        }
+    }
+    mysqli_close($conexion);
 }
 function guardarCambios($conexion)
 {
@@ -837,7 +1133,10 @@ function añadirAlumno($conexion)
 }
 function login($conexion)
 {
-
+//    CREAR TABLA SI NO EXISTE
+    $consulta = "CREATE TABLE IF NOT EXISTS `escuela`.`usuarios` ( `id` INT NOT NULL AUTO_INCREMENT , `usuario` VARCHAR(60) NOT NULL ,
+ `contraseña` VARCHAR(255) NOT NULL , `fecha_alt` VARCHAR(60) NOT NULL , `permisos` VARCHAR(60) NOT NULL , `tema` VARCHAR(60) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;";
+    $resultado = mysqli_query($conexion, $consulta);
 //  COMPROBAR QUE NO EXISTE UN USUARIO IGUAL
     $usuario = $_POST["usuario"];
     $consulta = "SELECT usuario FROM usuarios WHERE usuario = '$usuario'";
@@ -868,7 +1167,7 @@ function registro($conexion)
 {
 //    CREAR TABLA SI NO EXISTE
     $consulta = "CREATE TABLE IF NOT EXISTS `escuela`.`usuarios` ( `id` INT NOT NULL AUTO_INCREMENT , `usuario` VARCHAR(60) NOT NULL ,
- `contraseña` VARCHAR(255) NOT NULL , `fecha_alt` VARCHAR(60) NOT NULL , `permisos` VARCHAR(60) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;";
+ `contraseña` VARCHAR(255) NOT NULL , `fecha_alt` VARCHAR(60) NOT NULL , `permisos` VARCHAR(60) NOT NULL , `tema` VARCHAR(60) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;";
     $resultado = mysqli_query($conexion, $consulta);
 //  COMPROBAR QUE NO EXISTE UN USUARIO IGUAL
     $usuario = $_POST["usuario"];
@@ -883,10 +1182,10 @@ function registro($conexion)
         $hoy = getdate();
         $fecha = $hoy["mday"] . "/" . $hoy["mon"] . "/" . $hoy["year"];
         $contra = password_hash($_POST["contraseña"], PASSWORD_DEFAULT);
-        $data = array($_POST["usuario"],$contra,$fecha,"fase");
-         $consulta = "INSERT INTO `usuarios` (`usuario`, `contraseña`, `fecha_alt`, `permisos`)VALUES (?, ?, ?, ?)";
+        $data = array($_POST["usuario"],$contra,$fecha,"false","default");
+        $consulta = "INSERT INTO `usuarios` (`usuario`, `contraseña`, `fecha_alt`, `permisos`,`tema`)VALUES (?, ?, ?, ?, ?)";
         $resultado = mysqli_prepare($conexion, $consulta);
-        $ok = mysqli_stmt_bind_param($resultado, "ssss", ...$data);
+        $ok = mysqli_stmt_bind_param($resultado, "sssss", ...$data);
         $ok = mysqli_stmt_execute($resultado);
 
         if ($ok == false) {
@@ -908,8 +1207,6 @@ function imp($array)
     echo '<pre>';
 }
 ?>
-
-
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script type="text/javascript" src="js/js.js"></script>
