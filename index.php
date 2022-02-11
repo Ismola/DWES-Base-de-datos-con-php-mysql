@@ -212,7 +212,7 @@ if (isset($_POST["buscarModificados"])) {
 }
 if (isset($_POST["actualizarAlumnos"])) {
     guardarCambios($conexion);
-        $respuesta = 2;
+    $respuesta = 2;
     $_SESSION["seccion"] = 4;
 }
 if (isset($_POST["buscarEliminados"])) {
@@ -221,7 +221,7 @@ if (isset($_POST["buscarEliminados"])) {
 }
 if (isset($_POST["eliminarAlumnos"])) {
     if (eliminarAlumno($conexion) == 2){
-        $respuesta == 2;
+        $respuesta = 2;
     }
     $_SESSION["seccion"] = 5;
 }
@@ -234,8 +234,8 @@ if (isset($_POST["buscarusus"])) {
     $_SESSION["seccion"] = 7;
 }
 if (isset($_POST["actualizarUsuarios"])) {
-    $respuesta = 2;
     guardarUsuarios($conexion);
+    $respuesta = 2;
     $_SESSION["seccion"] = 7;
 }
 
@@ -477,7 +477,7 @@ switch ($_SESSION["seccion"]) {
                         echo "</div>";
                         echo "<div class='col d-flex justify-content-center'>";
                         echo "<form method='post' action=''>";
-                        echo "<input class='btn btn-outline-primary' type='submit' value='Modificar usuarios' name='modiusu'>";
+                        echo "<input class='btn btn-outline-primary' type='submit' value='Modificar Usuarios' name='modiusu'>";
                         echo "</form>";
                         echo "</div>";
                     }
@@ -571,7 +571,6 @@ switch ($_SESSION["seccion"]) {
             echo"</table>";
             echo "<input type='submit' class='btn btn-success' value='Guardar Cambios' name='actualizarAlumnos'>";
                 echo "</form>";
-                mysqli_close($conexion);
                 echo "</div>";
             echo "</div>";
             echo "</div>";
@@ -605,7 +604,7 @@ switch ($_SESSION["seccion"]) {
                         echo "</div>";
                         echo "<div class='col d-flex justify-content-center'>";
                         echo "<form method='post' action=''>";
-                        echo "<input class='btn btn-outline-primary' type='submit' value='Modificar usuarios' name='modiusu'>";
+                        echo "<input class='btn btn-outline-primary' type='submit' value='Modificar Usuarios' name='modiusu'>";
                         echo "</form>";
                         echo "</div>";
                     }
@@ -627,7 +626,7 @@ switch ($_SESSION["seccion"]) {
                 echo "<form method='post'>";
                 if ($respuesta == 2){
                     echo "<div class='input-group mb-3'>";
-                    echo "<div class='alert alert-success role='alert'>Alumnos eliminados correctamente</div>";
+                    echo "<div class='alert alert-danger role='alert'>Alumnos eliminados correctamente</div>";
                     echo "</div>";
                 }
                     echo "<div class='col'>";
@@ -698,9 +697,8 @@ switch ($_SESSION["seccion"]) {
             }
             echo"</tbody>";
             echo"</table>";
-            echo "<input type='submit' class='btn btn-success' value='Guardar Cambios' name='eliminarAlumnos'>";
+            echo "<input type='submit' class='btn btn-danger' value='Eliminar usuarios' name='eliminarAlumnos'>";
                 echo "</form>";
-                mysqli_close($conexion);
                 echo "</div>";
             echo "</div>";
             echo "</div>";
@@ -732,7 +730,7 @@ switch ($_SESSION["seccion"]) {
                         echo "</div>";
                         echo "<div class='col d-flex justify-content-center'>";
                         echo "<form method='post' action=''>";
-                        echo "<input class='btn btn-outline-primary' type='submit' value='Modificar usuarios' name='modiusu'>";
+                        echo "<input class='btn btn-outline-primary' type='submit' value='Modificar Usuarios' name='modiusu'>";
                         echo "</form>";
                         echo "</div>";
                     }
@@ -812,7 +810,6 @@ switch ($_SESSION["seccion"]) {
             echo"</tbody>";
             echo"</table>";
                 echo "</form>";
-                mysqli_close($conexion);
                 echo "</div>";
             echo "</div>";
             echo "</div>";
@@ -844,7 +841,7 @@ switch ($_SESSION["seccion"]) {
             echo "</div>";
             echo "<div class='col d-flex justify-content-center'>";
             echo "<form method='post' action=''>";
-            echo "<input class='btn btn-primary' type='submit' value='Modificar usuarios' name='modiusu'>";
+            echo "<input class='btn btn-primary' type='submit' value='Modificar Usuarios' name='modiusu'>";
             echo "</form>";
             echo "</div>";
         }
@@ -864,6 +861,11 @@ switch ($_SESSION["seccion"]) {
             echo "<div class='row mt-5 bg-white p-5 rounded shadow'>";
             echo "<form method='post'>";
             echo "<div class='col'>";
+            if ($respuesta == 2){
+                echo "<div class='input-group mb-3'>";
+                echo "<div class='alert alert-success role='alert'>Usuarios actualizados correctamente</div>";
+                echo "</div>";
+            }
             echo "<div class='input-group mb-3'>";
             echo "<input name='usuario' class='form-control' type='text' placeholder='Nombre del Alumno' >";
             echo "<input name='permisos'  class='form-control' type='text' placeholder='Apellidos del Alumno' >";
@@ -895,22 +897,24 @@ switch ($_SESSION["seccion"]) {
                 echo "<tbody>";
                 while ($fila = mysqli_fetch_row($resultado)) {
                     array_push($_SESSION["IDs"], $fila[0]);
+
+
                     echo "<tr>";
-                    echo "<td>";
-                    echo "<input  class='form-control' name='$contador' value='$fila[0]' type='text'>";
-                    $contador++;
-                    echo "</td>";
                     echo "<td>";
                     echo "<input  class='form-control' name='$contador' value='$fila[1]' type='text'>";
                     $contador++;
                     echo "</td>";
                     echo "<td>";
+                    echo "<input  class='form-control' name='$contador' value='$fila[2]' type='text'>";
+                    $contador++;
+                    echo "</td>";
+                    echo "<td>";
                     echo "<select class='form-control' name='$contador' id='' >";
-                    if ($fila[2] == "true"){
+                    if ($fila[3] == "true"){
                         echo "<option selected value='true'>Si</option>";
                         echo "<option value='false'>No</option>";
                     }
-                    if ($fila[2] == "false"){
+                    if ($fila[3] == "false"){
                         echo "<option value='true'>Si</option>";
                         echo "<option selected value='false'>No</option>";
                     }
@@ -919,21 +923,29 @@ switch ($_SESSION["seccion"]) {
                     echo "</td>";
                     echo "<td>";
                     echo "<select class='form-control' name='$contador' id='' >";
-                    if ($fila[3] == "yellow"){
+                    if ($fila[4] == "default"){
+                        echo "<option selected value='default'>Mediterraneo</option>";
+                        echo "<option  value='yellow'>Soleado</option>";
+                        echo "<option value='green'>Naturaleza</option>";
+                        echo "<option value='light'>Nevado</option>";
+                    }
+                    if ($fila[4] == "yellow"){
+                        echo "<option  value='default'>Mediterraneo</option>";
                         echo "<option selected value='yellow'>Soleado</option>";
                         echo "<option value='green'>Naturaleza</option>";
-                        echo "<option value='white'>Nevado</option>";
-
+                        echo "<option value='light'>Nevado</option>";
                     }
-                    if ($fila[3] == "green"){
+                    if ($fila[4] == "green"){
+                        echo "<option  value='default'>Mediterraneo</option>";
                         echo "<option  value='yellow'>Soleado</option>";
                         echo "<option selected value='green'>Naturaleza</option>";
-                        echo "<option value='white'>Nevado</option>";
+                        echo "<option value='light'>Nevado</option>";
                     }
-                    if ($fila[3] == "light"){
+                    if ($fila[4] == "light"){
+                        echo "<option  value='default'>Mediterraneo</option>";
                         echo "<option value='yellow'>Soleado</option>";
                         echo "<option value='green'>Naturaleza</option>";
-                        echo "<option selected value='white'>Nevado</option>";
+                        echo "<option selected value='light'>Nevado</option>";
                     }
                     echo "</select>";
                     $contador++;
@@ -944,7 +956,6 @@ switch ($_SESSION["seccion"]) {
                 echo"</table>";
                 echo "<input type='submit' class='btn btn-success' value='Guardar Cambios' name='actualizarUsuarios'>";
                 echo "</form>";
-                mysqli_close($conexion);
                 echo "</div>";
                 echo "</div>";
                 echo "</div>";
@@ -965,7 +976,7 @@ function crearBusquedaUsuarios(){
     if (isset($_POST["fecha_altUsu"])) {$fecha_altUsu = $_POST["fecha_altUsu"];}
     //  COMPROBAR QUE NO EXISTE UN USUARIO IGUAL
     $consulta = "SELECT
-    usuario, fecha_alt,permisos,tema
+    id, usuario, fecha_alt,permisos,tema
 FROM
     usuarios
 WHERE
@@ -1029,32 +1040,34 @@ WHERE
         telefono like '%$telefonoAlumno%'";
     return $consulta;
 }
-function guardarUsuarios($conexion){
+function guardarUsuarios($conexion)
+{
         $contador = 1;
+
     for ($i = 0; $i < count($_SESSION["IDs"]); $i++) {
+
         $data = array();
         for ($a = 0; $a < 4; $a++) {
             array_push($data, $_POST[$contador]);
             $contador++;
         }
-        imp($_SESSION["IDs"]);
-//        $id = $_SESSION["IDs"][$i];
-//        $consulta = "    UPDATE usuarios
-//                         SET usuario = ?,
-//                             fecha_alt= ?,
-//                             permisos = ?,
-//                             tema = ?,
-//                         WHERE id = $id";
-//        $resultado = mysqli_prepare($conexion, $consulta);
-//        $ok = mysqli_stmt_bind_param($resultado, "ssss", ...$data);
-//        $ok = mysqli_stmt_execute($resultado);
-//        if ($ok == false) {
-//            echo "error";
-//        } else {
-//            mysqli_stmt_close($resultado);
-//        }
+        $id = $_SESSION["IDs"][$i];
+        array_push($data, $id);
+        $consulta = "    UPDATE usuarios
+                         SET usuario = ?,
+                             fecha_alt= ?,
+                             permisos = ?,
+                             tema = ?
+                         WHERE id = ?";
+        $resultado = mysqli_prepare($conexion, $consulta);
+        $ok = mysqli_stmt_bind_param($resultado, "sssss", ...$data);
+        $ok = mysqli_stmt_execute($resultado);
+        if ($ok == false) {
+            echo "error";
+        } else {
+            mysqli_stmt_close($resultado);
+        }
     }
-    mysqli_close($conexion);
 }
 function guardarCambios($conexion)
 {
@@ -1087,7 +1100,6 @@ function guardarCambios($conexion)
             mysqli_stmt_close($resultado);
         }
     }
-    mysqli_close($conexion);
 }
 function añadirAlumno($conexion)
 {
@@ -1129,7 +1141,6 @@ function añadirAlumno($conexion)
             mysqli_stmt_close($resultado);
         }
     }
-    mysqli_close($conexion);
 }
 function login($conexion)
 {
@@ -1158,9 +1169,6 @@ function login($conexion)
         return 2;
         $_SESSION["seccion"] = 0;
     }
-
-//    CERRAR LA CONEXION
-    mysqli_close($conexion);
 
 }
 function registro($conexion)
@@ -1195,9 +1203,6 @@ function registro($conexion)
             mysqli_stmt_close($resultado);
         }
     }
-
-//    CERRAR LA CONEXION
-    mysqli_close($conexion);
 }
 function imp($array)
 {
@@ -1206,6 +1211,7 @@ function imp($array)
     print_r($array);
     echo '<pre>';
 }
+mysqli_close($conexion);
 ?>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
