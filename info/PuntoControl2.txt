@@ -1,2 +1,3 @@
 Bueno. Escribo esto habiendo terminado todo
 Teoricamente, la base de datos funciona sin errores
+Lee el readme, que hay explico un poco todo
