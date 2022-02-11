@@ -28,6 +28,7 @@ $respuesta = 0;
 	<script>new WOW().init();</script>
     <style type="text/css">
         <?php
+//        Esto servirá para cambiar los temas de colores de cada usuario
         if (isset($_SESSION['usuario'])){
             if ($_SESSION['usuario'] !== 0){
                 $usuario = $_SESSION['usuario'];
@@ -109,49 +110,7 @@ $respuesta = 0;
     </style>
 </head>
 <body>
-<!--
-----------AYUDAS
 
-COMO USAR ANIMACIONES
-
-	https://wowjs.uk/docs.html
-
-
-TODAS LAS ANIMACIONES
-
-	https://daneden.github.io/animate.css/
-
-
-ICONOS
-
-	https://fontawesome.com/icons?d=gallery&m=free
-
-TIPOGRAFIAS
-
-	https://fonts.google.com/
-
-	https://fonts.adobe.com/fonts
-
-
-COLORES
-
-	https://colorhunt.co/
-
-	https://flatuicolors.com/
-
-	https://color.adobe.com/es/create
-
-
-Imagenes de Stock
-
-
-	https://www.pexels.com/
-
-	https://pixabay.com/es/
-
-	https://stocksnap.io/
-
- -->
 <?php
 //Secciones:
 //0 > la de iniciar sesión
@@ -186,6 +145,8 @@ if (isset($_POST["modiusu"])) {
 }
 
 //Esta seccion son para los post que se hacen dentro de cada seccion
+//Seccion = 1, normalmente sirve para enseñar la tabla
+//Seccion = 2 normalmente sirve para enseñar un mensaje de: cambios realizados
 if (isset($_POST["logearse"])) {
     if (registro($conexion)==1){
         $respuesta = 1;
@@ -818,6 +779,7 @@ switch ($_SESSION["seccion"]) {
         break;
     case 7:
         echo "<div class='container w-100'>";
+//        Esta sección servirá para cambiar editar a los usuarios su nombre, su fecha de alta, sus permisos y su tema
         echo "<div class='row'>";
         echo "<nav class='navbar navbar-light bg-light d-flex justify-content-around rounded mt-3 shadow'>";
         echo "<div class='col d-flex justify-content-center'>";
@@ -857,6 +819,7 @@ switch ($_SESSION["seccion"]) {
         echo "</div>";
         echo "</nav>";
         echo "</div>";
+//        Esta sección es el formulario de busqueda para los usuarios
         if ($respuesta != 1){
             echo "<div class='row mt-5 bg-white p-5 rounded shadow'>";
             echo "<form method='post'>";
@@ -877,6 +840,7 @@ switch ($_SESSION["seccion"]) {
             echo "  </form>";
             echo "</div>";
         }
+//        Esta parte mostrará una tabla editable con los usuarios buscados
             if ($respuesta==1){
                 echo "<div class='row mt-5 bg-white p-5 rounded shadow'>";
                 echo "<div class='col'>";
@@ -897,8 +861,6 @@ switch ($_SESSION["seccion"]) {
                 echo "<tbody>";
                 while ($fila = mysqli_fetch_row($resultado)) {
                     array_push($_SESSION["IDs"], $fila[0]);
-
-
                     echo "<tr>";
                     echo "<td>";
                     echo "<input  class='form-control' name='$contador' value='$fila[1]' type='text'>";
@@ -964,6 +926,7 @@ switch ($_SESSION["seccion"]) {
 }
 
 //Estas son las funciones que se van a usar
+//No las comento mucho por dentro, porque son consultas simples y con el nombre se entiende
 function crearBusquedaUsuarios(){
     //    Esta funcion nos será muy util cada vez que queramos generar una busqueda con los campos escritos
     $usuario = "";
@@ -1043,9 +1006,7 @@ WHERE
 function guardarUsuarios($conexion)
 {
         $contador = 1;
-
     for ($i = 0; $i < count($_SESSION["IDs"]); $i++) {
-
         $data = array();
         for ($a = 0; $a < 4; $a++) {
             array_push($data, $_POST[$contador]);
