@@ -4,7 +4,6 @@ $server = "192.168.62.131";
 $user = "Ismael";
 $pwd = "Ismola2002";
 $db = "escuela";
-$_SESSION["seccion"] = 0;
 $conexion = mysqli_connect($server, $user, $pwd, $db);
 //Esto indica que la seccion por defeto es 0
 $_SESSION["seccion"] = 0;
