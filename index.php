@@ -19,13 +19,6 @@ $respuesta = 0;
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<!-- estilos -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="css/estilos.css">
-	<!-- iconos font awesome -->
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css" integrity="sha384-i1LQnF23gykqWXg6jxC2ZbCbUMxyw5gLZY6UiUS98LYV5unm8GWmfkIS6jqJfb4E" crossorigin="anonymous">
-	<!-- animaciones  -->
-	<link rel="stylesheet" href="css/animate.css">
-	<script src="js/wow.min.js"></script>
-	<script>new WOW().init();</script>
     <style type="text/css">
         body{
             background: linear-gradient(90deg, #0700b8 0%, #00ff88 100%);
